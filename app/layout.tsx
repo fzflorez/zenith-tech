@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { ThemeProvider } from "@/src/provider/ThemeProvider";
+import Header from "@/src/components/header/Header";
 
 export const metadata: Metadata = {
   title: "Zenith Tech",
@@ -23,7 +24,8 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            {children}
+            <Header />
+            <main>{children}</main>
           </ThemeProvider>
         </body>
       </html>

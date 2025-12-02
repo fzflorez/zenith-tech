@@ -5,7 +5,7 @@ import { ShoppingCartComponent } from "./ShoppingCartComponent";
 import { UserMenu } from "./UserMenu";
 import { Button } from "../ui/button";
 
-export const RightSideActions = () => {
+export function RightSideActions() {
   const user = 1;
 
   return (
@@ -20,4 +20,4 @@ export const RightSideActions = () => {
       )}
     </div>
   );
-};
+}

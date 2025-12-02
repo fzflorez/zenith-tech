@@ -9,9 +9,9 @@ import {
 } from "../ui/dropdown-menu";
 import { LogOutButton } from "./LogoutButton";
 
-export const UserMenu = () => {
-  const fullName = "Mauricio Florez";
+export function UserMenu() {
   const user = 1;
+  const fullName = "Mauricio Florez";
 
   return (
     <DropdownMenu>
@@ -39,4 +39,4 @@ export const UserMenu = () => {
       </DropdownMenuContent>
     </DropdownMenu>
   );
-};
+}

@@ -9,7 +9,7 @@ const navigationItems = [
   { name: "Productos", href: "/products", icon: Package },
 ];
 
-export const NavigationPanel = () => {
+export function NavigationPanel() {
   return (
     <>
       {navigationItems.map((item) => (
@@ -19,9 +19,9 @@ export const NavigationPanel = () => {
       ))}
     </>
   );
-};
+}
 
-export const NavigationPanelMobile = () => {
+export function NavigationPanelMobile() {
   const pathname = usePathname();
 
   return (
@@ -44,4 +44,4 @@ export const NavigationPanelMobile = () => {
       })}
     </nav>
   );
-};
+}
