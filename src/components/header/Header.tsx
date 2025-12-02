@@ -7,11 +7,11 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/src/components/ui/sheet";
-import { Menu, Store } from "lucide-react";
 import Link from "next/link";
-import { NavigationPanel, NavigationPanelMobile } from "./navigation-panel";
-import { RightSideActions } from "./right-side-actions";
-import { DarkModeToggle } from "../dark-mode-toggle";
+import { NavigationPanel, NavigationPanelMobile } from "./NavigationPanel";
+import { RightSideActions } from "./RightSideActions";
+import { Menu, Store } from "lucide-react";
+import { DarkModeToggle } from "../DarkModeToggle";
 
 export default function Header() {
   return (

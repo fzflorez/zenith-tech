@@ -1,9 +1,9 @@
 "use client";
 
 import Link from "next/link";
+import { ShoppingCartComponent } from "./ShoppingCartComponent";
+import { UserMenu } from "./UserMenu";
 import { Button } from "../ui/button";
-import { UserMenu } from "./user-menu";
-import { ShoppingCartComponent } from "./shopping-cart-component";
 
 export const RightSideActions = () => {
   const user = 1;
@@ -12,7 +12,7 @@ export const RightSideActions = () => {
     <div className="flex items-center">
       <ShoppingCartComponent />
       {user ? (
-        <UserMenu user={user} />
+        <UserMenu />
       ) : (
         <Button variant="default" size="sm">
           <Link href="/login">Login</Link>

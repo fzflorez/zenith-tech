@@ -7,7 +7,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import { LogOutButton } from "./log-out-button";
+import { LogOutButton } from "./LogoutButton";
 
 export const UserMenu = () => {
   const fullName = "Mauricio Florez";
@@ -32,9 +32,7 @@ export const UserMenu = () => {
       <DropdownMenuContent align="end" className="w-56">
         <div className="px-2 py-1.5">
           <p className="text-base font-semibold">{fullName}</p>
-          <p className="text-muted-foreground text-sm">
-            {user?.user_metadata.email}
-          </p>
+          <p className="text-muted-foreground text-sm">{user}</p>
         </div>
         <DropdownMenuSeparator />
         <LogOutButton />
