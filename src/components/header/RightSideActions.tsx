@@ -1,11 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { ShoppingCartComponent } from "./ShoppingCartComponent";
-import { UserMenu } from "./UserMenu";
+import ShoppingCartComponent from "./ShoppingCartComponent";
+import UserMenu from "./UserMenu";
 import { Button } from "../ui/button";
 
-export function RightSideActions() {
+export default function RightSideActions() {
   const user = 1;
 
   return (

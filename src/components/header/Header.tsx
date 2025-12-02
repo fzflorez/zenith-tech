@@ -9,7 +9,7 @@ import {
 } from "@/src/components/ui/sheet";
 import Link from "next/link";
 import { NavigationPanel, NavigationPanelMobile } from "./NavigationPanel";
-import { RightSideActions } from "./RightSideActions";
+import RightSideActions from "./RightSideActions";
 import { Menu, Store } from "lucide-react";
 import { DarkModeToggle } from "../DarkModeToggle";
 

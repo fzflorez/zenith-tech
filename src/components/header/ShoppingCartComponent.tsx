@@ -3,7 +3,7 @@ import { Button } from "../ui/button";
 import Link from "next/link";
 import { ShoppingCart } from "lucide-react";
 
-export function ShoppingCartComponent() {
+export default function ShoppingCartComponent() {
   const showCounter = 1;
 
   return (

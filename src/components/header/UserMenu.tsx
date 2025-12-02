@@ -7,9 +7,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import { LogOutButton } from "./LogoutButton";
+import LogOutButton from "./LogoutButton";
 
-export function UserMenu() {
+export default function UserMenu() {
   const user = 1;
   const fullName = "Mauricio Florez";
 
