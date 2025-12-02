@@ -7,7 +7,7 @@ import {
   CardTitle,
 } from "@/src/components/ui/card";
 import Link from "next/link";
-import CartClient from "./CartClient";
+import CartClient from "./CartClientPage";
 
 export default function CartPage() {
   const user = 1;

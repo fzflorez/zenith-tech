@@ -14,7 +14,7 @@ import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
-export default function CartClient() {
+export default function CartClientPage() {
   const [items, setItems] = useState([]); // solo por el momento
 
   return (
