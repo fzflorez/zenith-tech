@@ -1,6 +1,11 @@
 import ProductGrid from "@/src/components/products/ProductGrid";
+import { Product } from "@/src/types/product";
 
-export default function ProductsClientPage({ products }) {
+export default function ProductsClientPage({
+  products,
+}: {
+  products: Product[];
+}) {
   return (
     <section className="pt-24 pb-10">
       <div className="mx-auto flex max-w-7xl flex-col gap-6 px-5">

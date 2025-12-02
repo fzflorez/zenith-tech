@@ -8,8 +8,9 @@ import { Button } from "../ui/button";
 import { ChevronRight, ShoppingCart } from "lucide-react";
 import { useTransition } from "react";
 import Link from "next/link";
+import { Product } from "@/src/types/product";
 
-export default function ProductCard({ product }) {
+export default function ProductCard({ product }: { product: Product }) {
   const [isPending, startTransition] = useTransition();
 
   return (
