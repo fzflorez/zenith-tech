@@ -1,5 +1,3 @@
-"use client";
-
 import { User } from "@supabase/supabase-js";
 import { Button } from "../ui/button";
 import {
@@ -24,12 +22,12 @@ export default function UserMenu({ user }: Props) {
         <Button
           variant="ghost"
           size="sm"
-          className="focus:bg-accent flex items-center gap-2 p-0"
+          className="focus:bg-accent flex items-center gap-2 p-0 "
         >
           <div className="bg-primary text-primary-foreground flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold">
             {fullName.charAt(0).toUpperCase()}
           </div>
-          <span className="hidden text-base sm:block">
+          <span className="text-accent-foreground hidden text-base sm:block">
             {fullName.split(" ")[0]}
           </span>
         </Button>

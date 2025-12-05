@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import ShoppingCartComponent from "./ShoppingCartComponent";
 import UserMenu from "./UserMenu";
@@ -11,7 +13,7 @@ type Props = {
 export default function RightSideActions({ user }: Props) {
   return (
     <div className="flex items-center">
-      <ShoppingCartComponent user={user} />
+      <ShoppingCartComponent />
       {user ? (
         <UserMenu user={user} />
       ) : (

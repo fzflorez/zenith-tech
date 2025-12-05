@@ -13,7 +13,11 @@ export function NavigationPanel() {
   return (
     <>
       {navigationItems.map((item) => (
-        <Link key={item.name} href={item.href} className="hover:underline">
+        <Link
+          key={item.name}
+          href={item.href}
+          className="text-accent-foreground hover:underline"
+        >
           {item.name}
         </Link>
       ))}
