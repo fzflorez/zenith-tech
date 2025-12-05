@@ -1,5 +1,6 @@
 "use client";
 
+import { User } from "@supabase/supabase-js";
 import { Button } from "../ui/button";
 import {
   DropdownMenu,
@@ -9,9 +10,13 @@ import {
 } from "../ui/dropdown-menu";
 import LogOutButton from "./LogoutButton";
 
-export default function UserMenu() {
-  const user = 1;
-  const fullName = "Mauricio Florez";
+type Props = {
+  user: User | null;
+};
+
+export default function UserMenu({ user }: Props) {
+  const fullName = user?.user_metadata.fullName;
+  const email = user?.user_metadata.email;
 
   return (
     <DropdownMenu>
@@ -32,7 +37,7 @@ export default function UserMenu() {
       <DropdownMenuContent align="end" className="w-56">
         <div className="px-2 py-1.5">
           <p className="text-base font-semibold">{fullName}</p>
-          <p className="text-muted-foreground text-sm">{user}</p>
+          <p className="text-muted-foreground text-sm">{email}</p>
         </div>
         <DropdownMenuSeparator />
         <LogOutButton />

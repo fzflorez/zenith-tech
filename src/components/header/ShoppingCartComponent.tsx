@@ -2,8 +2,13 @@
 import { Button } from "../ui/button";
 import Link from "next/link";
 import { ShoppingCart } from "lucide-react";
+import { User } from "@supabase/supabase-js";
 
-export default function ShoppingCartComponent() {
+type Props = {
+  user: User | null;
+};
+
+export default function ShoppingCartComponent({ user }: Props) {
   const showCounter = 1;
 
   return (

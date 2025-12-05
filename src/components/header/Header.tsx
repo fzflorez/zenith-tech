@@ -1,5 +1,3 @@
-"use client";
-
 import {
   Sheet,
   SheetContent,
@@ -12,8 +10,11 @@ import { NavigationPanel, NavigationPanelMobile } from "./NavigationPanel";
 import RightSideActions from "./RightSideActions";
 import { Menu, Store } from "lucide-react";
 import { DarkModeToggle } from "../DarkModeToggle";
+import { getUser } from "@/src/auth/server";
 
-export default function Header() {
+export default async function Header() {
+  const user = await getUser();
+
   return (
     <header className="fixed top-0 z-10 w-full border-b bg-white/30 px-5 backdrop-blur-lg xl:px-0">
       <div className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between">
@@ -27,7 +28,7 @@ export default function Header() {
         </div>
 
         <div className="flex items-center gap-3 md:gap-4">
-          <RightSideActions />
+          <RightSideActions user={user} />
           <DarkModeToggle />
 
           <Sheet>
