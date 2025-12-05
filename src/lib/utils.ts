@@ -15,3 +15,8 @@ export function formatCurrency(value: number) {
     .format(value)
     .replace(/\s/g, "");
 }
+
+export function getErrorMessage(error: unknown): string {
+  if (error instanceof Error) return error.message;
+  return "Ha ocurrido un error, por favor intenta de nuevo.";
+}

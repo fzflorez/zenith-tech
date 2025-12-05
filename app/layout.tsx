@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { ThemeProvider } from "@/src/provider/ThemeProvider";
 import Header from "@/src/components/header/Header";
+import { Toaster } from "sonner";
 
 export const metadata: Metadata = {
   title: "Zenith Tech",
@@ -26,6 +27,7 @@ export default function RootLayout({
           >
             <Header />
             <main>{children}</main>
+            <Toaster />
           </ThemeProvider>
         </body>
       </html>

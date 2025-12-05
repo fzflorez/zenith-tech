@@ -6,7 +6,7 @@ import UserMenu from "./UserMenu";
 import { Button } from "../ui/button";
 
 export default function RightSideActions() {
-  const user = 1;
+  const user = null;
 
   return (
     <div className="flex items-center">
