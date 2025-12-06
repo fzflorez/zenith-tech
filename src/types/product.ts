@@ -4,7 +4,7 @@ export type Product = {
   description: string | null;
   price: number;
   original_price: number | null;
-  image: string | null;
+  image: string;
   rating: number;
   review_count: number;
   category: string | null;

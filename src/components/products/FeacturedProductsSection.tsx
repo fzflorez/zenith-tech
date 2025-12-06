@@ -1,4 +1,3 @@
-import { products } from "@/src/db-tem/products";
 import { Card, CardContent } from "../ui/card";
 import Image from "next/image";
 import { formatCurrency } from "@/src/lib/utils";
@@ -6,8 +5,11 @@ import { Button } from "../ui/button";
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 import { Badge } from "../ui/badge";
+import { getProducts } from "@/src/actions/products";
 
-export default function FeacturedProductsSection() {
+export default async function FeacturedProductsSection() {
+  const products = await getProducts();
+
   return (
     <section className="py-20">
       <div className="text-center">
@@ -38,7 +40,7 @@ export default function FeacturedProductsSection() {
                        33vw"
                 className="object-cover transition-transform duration-200 group-hover:scale-105"
               />
-              {product.originalPrice && (
+              {product.original_price && (
                 <Badge className="absolute top-2 left-2 bg-red-500">Sale</Badge>
               )}
             </div>
@@ -48,9 +50,9 @@ export default function FeacturedProductsSection() {
                 <span className="text-xl font-bold">
                   {formatCurrency(2000)}
                 </span>
-                {product.originalPrice && (
+                {product.original_price && (
                   <span className="text-muted-foreground text-sm line-through">
-                    {formatCurrency(product.originalPrice)}
+                    {formatCurrency(product.original_price)}
                   </span>
                 )}
               </div>
