@@ -9,9 +9,15 @@ import { ChevronRight, ShoppingCart } from "lucide-react";
 import { useTransition } from "react";
 import Link from "next/link";
 import { Product } from "@/src/types/product";
+import { addToCart } from "@/src/actions/cart";
 
 export default function ProductCard({ product }: { product: Product }) {
   const [isPending, startTransition] = useTransition();
+
+  function handleAddToCart() {
+    console.log("Agregando producto");
+    addToCart(product.id);
+  }
 
   return (
     <Card className="group flex flex-col transition-shadow hover:shadow-lg">
@@ -35,7 +41,10 @@ export default function ProductCard({ product }: { product: Product }) {
         </div>
 
         <div className="space-y-3">
-          <Button className="flex w-full items-center gap-2">
+          <Button
+            onClick={handleAddToCart}
+            className="flex w-full items-center gap-2"
+          >
             <ShoppingCart className="h-4 w-4" />
             {isPending ? "Agregando..." : "Agregar al carrito"}
           </Button>

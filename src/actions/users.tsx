@@ -2,6 +2,7 @@
 
 import { createClient } from "../auth/server";
 import { getErrorMessage } from "../lib/utils";
+import { getOrCreateCart } from "./cart";
 
 type ActionResult = {
   errorMessage: string | null;
@@ -13,10 +14,11 @@ export const loginAction = async (
 ): Promise<ActionResult> => {
   try {
     const supabase = await createClient();
-    const { error } = await supabase.auth.signInWithPassword({
+    const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
+
     if (error) {
       let customMessage = "Ha ocurrido un error, por favor intenta de nuevo.";
 
@@ -25,6 +27,11 @@ export const loginAction = async (
       }
 
       return { errorMessage: customMessage };
+    }
+
+    // ⬇️ NUEVO: crear o recuperar carrito aquí
+    if (data.user) {
+      await getOrCreateCart(data.user.id);
     }
 
     return { errorMessage: null };
