@@ -5,11 +5,13 @@ import { Button } from "../ui/button";
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 import { Badge } from "../ui/badge";
-import { getProducts } from "@/src/actions/products";
+import { Product } from "@/src/types/product";
 
-export default async function FeacturedProductsSection() {
-  const products = await getProducts();
+type Props = {
+  products: Product[];
+};
 
+export default function FeacturedProductsSection({ products }: Props) {
   return (
     <section className="py-20">
       <div className="text-center">
@@ -48,7 +50,7 @@ export default async function FeacturedProductsSection() {
               <h3 className="mb-2 text-lg font-semibold">{product.name}</h3>
               <div className="mb-4 flex items-center gap-2">
                 <span className="text-xl font-bold">
-                  {formatCurrency(2000)}
+                  {formatCurrency(product.price)}
                 </span>
                 {product.original_price && (
                   <span className="text-muted-foreground text-sm line-through">

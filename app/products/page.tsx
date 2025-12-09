@@ -1,6 +1,7 @@
-import { products } from "@/src/db-tem/products";
+import { getProducts } from "@/src/actions/products";
 import ProductsClientPage from "./ProductsClientPage";
 
-export default function ProductsPage() {
+export default async function ProductsPage() {
+  const products = await getProducts();
   return <ProductsClientPage products={products} />;
 }

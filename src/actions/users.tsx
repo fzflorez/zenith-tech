@@ -29,7 +29,7 @@ export const loginAction = async (
       return { errorMessage: customMessage };
     }
 
-    // ⬇️ NUEVO: crear o recuperar carrito aquí
+    // crear o recuperar carrito aquí
     if (data.user) {
       await getOrCreateCart(data.user.id);
     }
