@@ -10,13 +10,22 @@ import { useTransition } from "react";
 import Link from "next/link";
 import { Product } from "@/src/types/product";
 import { addToCart } from "@/src/actions/cart";
+import { toast } from "sonner";
 
 export default function ProductCard({ product }: { product: Product }) {
   const [isPending, startTransition] = useTransition();
 
   function handleAddToCart() {
-    console.log("Agregando producto");
-    addToCart(product.id);
+    startTransition(async () => {
+      const result = await addToCart(product.id);
+
+      if (result?.error) {
+        toast.error(result.error);
+        return;
+      }
+
+      toast.success("Producto agregado al carrito");
+    });
   }
 
   return (

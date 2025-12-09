@@ -7,10 +7,12 @@ import {
   CardTitle,
 } from "@/src/components/ui/card";
 import Link from "next/link";
-import CartClient from "./CartClientPage";
+import { getUser } from "@/src/auth/server";
+import { getCartItems } from "@/src/actions/cart";
+import CartClientPage from "./CartClientPage";
 
-export default function CartPage() {
-  const user = 1;
+export default async function CartPage() {
+  const user = await getUser();
 
   if (!user) {
     return (
@@ -38,10 +40,12 @@ export default function CartPage() {
     );
   }
 
+  const items = await getCartItems();
+
   return (
     <section className="pt-24 pb-10">
       <div className="mx-auto flex max-w-7xl flex-col gap-6 px-5">
-        <CartClient />
+        <CartClientPage items={items} />
       </div>
     </section>
   );

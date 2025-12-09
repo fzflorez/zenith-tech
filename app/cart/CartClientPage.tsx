@@ -10,12 +10,18 @@ import {
   CardFooter,
 } from "@/src/components/ui/card";
 import { formatCurrency } from "@/src/lib/utils";
+import { CartItem } from "@/src/types/cart";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
 
-export default function CartClientPage() {
-  const [items, setItems] = useState([]); // solo por el momento
+type Props = {
+  items: CartItem[];
+};
+
+export default function CartClientPage({ items }: Props) {
+  console.log("Items:", items);
+
+  const totalQuantity = items.reduce((sum, item) => sum + item.quantity, 0);
 
   return (
     <>
@@ -30,15 +36,14 @@ export default function CartClientPage() {
       <h1 className="mb-1 text-3xl font-semibold">Tu Carrito</h1>
 
       <p className="text-muted-foreground mb-8 text-sm">
-        1 articulo en tu carrito
+        {totalQuantity} {totalQuantity === 1 ? "Artículo" : "Artículos"} en tu
+        carrito
       </p>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         <div className="space-y-4 lg:col-span-2">
-          {items.map((item, index) => (
-            <ItemCard
-              key={index} // index por el momento
-            />
+          {items.map((item) => (
+            <ItemCard key={item.id} item={item} />
           ))}
         </div>
 
