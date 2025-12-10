@@ -1,5 +1,6 @@
 "use client";
 
+import CartEmpty from "@/src/components/cart/CartEmpty";
 import ItemCard from "@/src/components/cart/ItemCard";
 import { Button } from "@/src/components/ui/button";
 import {
@@ -19,9 +20,9 @@ type Props = {
 };
 
 export default function CartClientPage({ items }: Props) {
-  console.log("Items:", items);
-
   const totalQuantity = items.reduce((sum, item) => sum + item.quantity, 0);
+
+  if (items.length === 0) return <CartEmpty />;
 
   return (
     <>

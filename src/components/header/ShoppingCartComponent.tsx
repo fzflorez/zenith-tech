@@ -1,15 +1,23 @@
 import { Button } from "../ui/button";
 import Link from "next/link";
 import { ShoppingCart } from "lucide-react";
+import { CartItem } from "@/src/types/cart";
+import { User } from "@supabase/supabase-js";
 
-export default function ShoppingCartComponent() {
-  const showCounter = 1;
+type Props = {
+  user: User | null;
+  items: CartItem[];
+};
+
+export default function ShoppingCartComponent({ user, items }: Props) {
+  const totalQuantity = items.reduce((sum, item) => sum + item.quantity, 0);
+  const showCounter = user && totalQuantity > 0;
 
   return (
     <div className={`relative ${showCounter ? "mr-4" : "mr-0"}`}>
       {showCounter && (
         <div className="bg-secondary-foreground text-primary-foreground absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full text-xs font-semibold sm:text-sm">
-          {1}
+          {totalQuantity}
         </div>
       )}
       <Button variant="link" size="sm" className="cursor-pointer">

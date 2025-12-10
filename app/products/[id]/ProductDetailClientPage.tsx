@@ -7,16 +7,50 @@ import { Badge } from "@/src/components/ui/badge";
 import { formatCurrency } from "@/src/lib/utils";
 import { Card, CardContent } from "@/src/components/ui/card";
 import { Button } from "@/src/components/ui/button";
-import { useTransition } from "react";
+import { useMemo, useTransition } from "react";
 import { Product } from "@/src/types/product";
+import { CartItem } from "@/src/types/cart";
+import { toast } from "sonner";
+import { User } from "@supabase/supabase-js";
+import { addToCart } from "@/src/actions/cart";
+
+type Props = {
+  product: Product;
+  items: CartItem[];
+  user: User | null;
+};
 
 export default function ProductDetailClientPage({
-  products,
-}: {
-  products: Product[];
-}) {
+  product,
+  items,
+  user,
+}: Props) {
   const [isPending, startTransition] = useTransition();
-  const product = products[0];
+
+  const availableStock = useMemo(() => {
+    const itemInCart = items.find((i) => i.product.id === product.id);
+    const cartQty = itemInCart ? itemInCart.quantity : 0;
+    return Math.max(0, product.stock_quantity - cartQty);
+  }, [items, product]);
+
+  const discountPercentage =
+    product.original_price && product.original_price > product.price
+      ? Math.round(
+          ((product.original_price - product.price) / product.original_price) *
+            100
+        )
+      : 0;
+
+  const handleAddToCart = () => {
+    if (!product.in_stock) return toast.error("Este producto está agotado");
+    if (!user?.id) return toast.error("Debes iniciar sesión");
+
+    startTransition(() => {
+      addToCart(product.id)
+        .then(() => toast.success(`${product.name} agregado al carrito`))
+        .catch(() => toast.error("Error al agregar al carrito"));
+    });
+  };
 
   return (
     <section className="pt-24 pb-10">
@@ -34,12 +68,22 @@ export default function ProductDetailClientPage({
             <div className="relative aspect-square overflow-hidden rounded-lg border">
               <Image
                 src={product.image}
-                alt={"Nombre imagen"}
+                alt={product.name}
                 fill
                 priority
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 className="object-cover"
               />
+              {discountPercentage > 0 && (
+                <Badge className="absolute top-4 left-4 bg-red-500 hover:bg-red-600">
+                  -{discountPercentage}%
+                </Badge>
+              )}
+              {!product.in_stock && (
+                <Badge variant="secondary" className="absolute top-4 right-4">
+                  Agotado
+                </Badge>
+              )}
             </div>
           </div>
 
@@ -60,7 +104,7 @@ export default function ProductDetailClientPage({
                   ))}
                 </div>
                 <span className="text-muted-foreground text-sm">
-                  {product.rating} ({product.reviewCount} reseñas)
+                  {product.rating} ({product.review_count} reseñas)
                 </span>
               </div>
             </div>
@@ -69,9 +113,9 @@ export default function ProductDetailClientPage({
               <span className="text-3xl font-bold">
                 {formatCurrency(product.price)}
               </span>
-              {product.originalPrice && (
+              {product.original_price && (
                 <span className="text-muted-foreground text-xl line-through">
-                  {formatCurrency(product.originalPrice)}
+                  {formatCurrency(product.original_price)}
                 </span>
               )}
             </div>
@@ -91,12 +135,31 @@ export default function ProductDetailClientPage({
             <div className="space-y-4">
               <div className="flex items-center justify-between text-sm">
                 <span>Stock:</span>
-                <span>{product.stockQuantity}</span>
+                <span
+                  className={
+                    availableStock > 0 ? "text-green-600" : "text-red-600"
+                  }
+                >
+                  {availableStock > 0
+                    ? `${availableStock} Disponible`
+                    : "Agotado"}
+                </span>
               </div>
 
-              <Button size="lg" className="w-full cursor-pointer">
+              <Button
+                size="lg"
+                className="w-full cursor-pointer"
+                disabled={
+                  !product.in_stock || isPending || availableStock === 0
+                }
+                onClick={handleAddToCart}
+              >
                 <ShoppingCart className="mr-2 h-5 w-5" />
-                {isPending ? "Agregando..." : "Sin stock"}
+                {isPending
+                  ? "Agregando..."
+                  : availableStock > 0
+                  ? "Añadir al Carrito"
+                  : "Sin stock"}
               </Button>
             </div>
           </div>

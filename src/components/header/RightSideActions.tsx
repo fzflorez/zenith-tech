@@ -1,19 +1,19 @@
-"use client";
-
 import Link from "next/link";
 import ShoppingCartComponent from "./ShoppingCartComponent";
 import UserMenu from "./UserMenu";
 import { Button } from "../ui/button";
 import { User } from "@supabase/supabase-js";
+import { CartItem } from "@/src/types/cart";
 
 type Props = {
   user: User | null;
+  items: CartItem[];
 };
 
-export default function RightSideActions({ user }: Props) {
+export default function RightSideActions({ user, items }: Props) {
   return (
     <div className="flex items-center">
-      <ShoppingCartComponent />
+      <ShoppingCartComponent user={user} items={items} />
       {user ? (
         <UserMenu user={user} />
       ) : (

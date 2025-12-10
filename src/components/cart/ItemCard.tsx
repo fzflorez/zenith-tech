@@ -33,7 +33,11 @@ export default function ItemCard({ item }: Props) {
 
     const newQty = quantity + 1;
     setQuantity(newQty);
-    await updateCartQuantity(item.id, newQty);
+
+    startTransition(async () => {
+      await updateCartQuantity(item.id, newQty);
+      router.refresh();
+    });
   }
 
   async function handleDecrease() {
@@ -41,7 +45,11 @@ export default function ItemCard({ item }: Props) {
 
     const newQty = quantity - 1;
     setQuantity(newQty);
-    await updateCartQuantity(item.id, newQty);
+
+    startTransition(async () => {
+      await updateCartQuantity(item.id, newQty);
+      router.refresh();
+    });
   }
 
   async function handleManualChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -54,7 +62,11 @@ export default function ItemCard({ item }: Props) {
     if (value > totalStock) finalValue = totalStock;
 
     setQuantity(finalValue);
-    await updateCartQuantity(item.id, finalValue);
+
+    startTransition(async () => {
+      await updateCartQuantity(item.id, finalValue);
+      router.refresh();
+    });
   }
 
   async function handleRemoveCartItem() {
