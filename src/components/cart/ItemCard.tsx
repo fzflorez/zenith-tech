@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, startTransition } from "react";
+import { useState, useMemo, startTransition, ChangeEvent } from "react";
 import { formatCurrency } from "@/src/lib/utils";
 import { Card, CardContent, CardFooter, CardTitle } from "../ui/card";
 import Image from "next/image";
@@ -10,15 +10,16 @@ import { CartItem } from "@/src/types/cart";
 import { removeCartItem, updateCartQuantity } from "@/src/actions/cart";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { useCart } from "@/src/context/CartContext";
 
 type Props = {
   item: CartItem;
 };
 
 export default function ItemCard({ item }: Props) {
-  const [quantity, setQuantity] = useState(item.quantity);
+  const { refreshCart } = useCart();
 
-  const router = useRouter();
+  const [quantity, setQuantity] = useState(item.quantity);
 
   // Stock total real desde Supabase
   const totalStock = item.product.stock_quantity;
@@ -29,15 +30,11 @@ export default function ItemCard({ item }: Props) {
   }, [totalStock, quantity]);
 
   async function handleIncrease() {
-    if (availableStock <= 0) return;
-
     const newQty = quantity + 1;
     setQuantity(newQty);
 
-    startTransition(async () => {
-      await updateCartQuantity(item.id, newQty);
-      router.refresh();
-    });
+    await updateCartQuantity(item.id, newQty);
+    refreshCart(); // ← aquí
   }
 
   async function handleDecrease() {
@@ -46,44 +43,21 @@ export default function ItemCard({ item }: Props) {
     const newQty = quantity - 1;
     setQuantity(newQty);
 
-    startTransition(async () => {
-      await updateCartQuantity(item.id, newQty);
-      router.refresh();
-    });
+    await updateCartQuantity(item.id, newQty);
+    refreshCart(); // ← aquí
   }
 
-  async function handleManualChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const value = Number(e.target.value);
-    if (Number.isNaN(value)) return;
+  async function handleManualChange(e: ChangeEvent<HTMLInputElement>) {
+    const val = Number(e.target.value);
+    setQuantity(val);
 
-    let finalValue = value;
-
-    if (value < 1) finalValue = 1;
-    if (value > totalStock) finalValue = totalStock;
-
-    setQuantity(finalValue);
-
-    startTransition(async () => {
-      await updateCartQuantity(item.id, finalValue);
-      router.refresh();
-    });
+    await updateCartQuantity(item.id, val);
+    refreshCart(); // ← aquí
   }
 
   async function handleRemoveCartItem() {
-    startTransition(async () => {
-      const result = await removeCartItem(item.id);
-
-      if (result?.error) {
-        toast.error(result.error);
-        return;
-      }
-
-      toast.success(`${item.product.name}`, {
-        description: "Eliminado del carrito.",
-      });
-
-      router.refresh();
-    });
+    await removeCartItem(item.id);
+    refreshCart(); // ← aquí
   }
 
   return (

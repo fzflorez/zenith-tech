@@ -10,16 +10,15 @@ import {
   CardContent,
   CardFooter,
 } from "@/src/components/ui/card";
+import { useCart } from "@/src/context/CartContext";
 import { formatCurrency } from "@/src/lib/utils";
 import { CartItem } from "@/src/types/cart";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
-type Props = {
-  items: CartItem[];
-};
+export default function CartClientPage() {
+  const { items } = useCart();
 
-export default function CartClientPage({ items }: Props) {
   const totalQuantity = items.reduce((sum, item) => sum + item.quantity, 0);
 
   if (items.length === 0) return <CartEmpty />;

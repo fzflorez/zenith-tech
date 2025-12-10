@@ -1,15 +1,17 @@
+"use client";
+
 import { Button } from "../ui/button";
 import Link from "next/link";
 import { ShoppingCart } from "lucide-react";
-import { CartItem } from "@/src/types/cart";
 import { User } from "@supabase/supabase-js";
+import { useCart } from "@/src/context/CartContext";
 
 type Props = {
   user: User | null;
-  items: CartItem[];
 };
 
-export default function ShoppingCartComponent({ user, items }: Props) {
+export default function ShoppingCartComponent({ user }: Props) {
+  const { items } = useCart();
   const totalQuantity = items.reduce((sum, item) => sum + item.quantity, 0);
   const showCounter = user && totalQuantity > 0;
 

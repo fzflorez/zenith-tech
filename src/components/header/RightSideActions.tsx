@@ -3,17 +3,15 @@ import ShoppingCartComponent from "./ShoppingCartComponent";
 import UserMenu from "./UserMenu";
 import { Button } from "../ui/button";
 import { User } from "@supabase/supabase-js";
-import { CartItem } from "@/src/types/cart";
 
 type Props = {
   user: User | null;
-  items: CartItem[];
 };
 
-export default function RightSideActions({ user, items }: Props) {
+export default function RightSideActions({ user }: Props) {
   return (
     <div className="flex items-center">
-      <ShoppingCartComponent user={user} items={items} />
+      <ShoppingCartComponent user={user} />
       {user ? (
         <UserMenu user={user} />
       ) : (

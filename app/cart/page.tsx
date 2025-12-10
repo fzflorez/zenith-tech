@@ -40,12 +40,12 @@ export default async function CartPage() {
     );
   }
 
-  const items = await getCartItems();
+  // const items = await getCartItems();
 
   return (
     <section className="pt-24 pb-10">
       <div className="mx-auto flex max-w-7xl flex-col gap-6 px-5">
-        <CartClientPage items={items} />
+        <CartClientPage />
       </div>
     </section>
   );

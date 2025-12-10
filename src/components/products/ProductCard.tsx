@@ -11,11 +11,11 @@ import Link from "next/link";
 import { Product } from "@/src/types/product";
 import { addToCart } from "@/src/actions/cart";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+import { useCart } from "@/src/context/CartContext";
 
 export default function ProductCard({ product }: { product: Product }) {
   const [isPending, startTransition] = useTransition();
-  const router = useRouter();
+  const { refreshCart } = useCart();
 
   function handleAddToCart() {
     startTransition(async () => {
@@ -28,7 +28,7 @@ export default function ProductCard({ product }: { product: Product }) {
 
       toast.success(`${product.name} agregado al carrito`);
 
-      router.refresh();
+      await refreshCart();
     });
   }
 

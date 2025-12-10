@@ -3,6 +3,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/src/provider/ThemeProvider";
 import Header from "@/src/components/header/Header";
 import { Toaster } from "sonner";
+import { CartProvider } from "@/src/context/CartContext";
 
 export const metadata: Metadata = {
   title: "Zenith Tech",
@@ -25,9 +26,11 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <Header />
-            <main>{children}</main>
-            <Toaster />
+            <CartProvider>
+              <Header />
+              <main>{children}</main>
+              <Toaster />
+            </CartProvider>
           </ThemeProvider>
         </body>
       </html>

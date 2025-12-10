@@ -103,6 +103,7 @@ export async function getCartItems(): Promise<CartItem[]> {
       `
       id,
       quantity,
+      created_at,
       product:products!cart_items_product_id_fkey (
         id,
         name,
@@ -119,7 +120,8 @@ export async function getCartItems(): Promise<CartItem[]> {
       )
     `
     )
-    .eq("cart_id", cart.id);
+    .eq("cart_id", cart.id)
+    .order("created_at", { ascending: true });
 
   if (error) {
     console.log("Error obteniendo cart_items:", error);

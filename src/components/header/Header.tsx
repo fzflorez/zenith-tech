@@ -11,11 +11,9 @@ import RightSideActions from "./RightSideActions";
 import { Menu, Store } from "lucide-react";
 import { DarkModeToggle } from "../DarkModeToggle";
 import { getUser } from "@/src/auth/server";
-import { getCartItems } from "@/src/actions/cart";
 
 export default async function Header() {
   const user = await getUser();
-  const items = await getCartItems();
 
   return (
     <header className="fixed top-0 z-10 w-full border-b bg-white/30 px-5 backdrop-blur-lg xl:px-0">
@@ -33,7 +31,7 @@ export default async function Header() {
         </div>
 
         <div className="flex items-center gap-3 md:gap-4">
-          <RightSideActions user={user} items={items} />
+          <RightSideActions user={user} />
           <DarkModeToggle />
 
           <Sheet>
