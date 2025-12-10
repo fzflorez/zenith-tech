@@ -1,37 +1,34 @@
 "use client";
 
-import { ArrowLeft, ShoppingCart, Star } from "lucide-react";
+import { ArrowLeft, Loader2, ShoppingCart, Star } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { Badge } from "@/src/components/ui/badge";
 import { formatCurrency } from "@/src/lib/utils";
 import { Card, CardContent } from "@/src/components/ui/card";
 import { Button } from "@/src/components/ui/button";
-import { useMemo, useTransition } from "react";
+import { useTransition } from "react";
 import { Product } from "@/src/types/product";
-import { CartItem } from "@/src/types/cart";
 import { toast } from "sonner";
 import { User } from "@supabase/supabase-js";
 import { addToCart } from "@/src/actions/cart";
+import { useCart } from "@/src/context/CartContext";
 
 type Props = {
   product: Product;
-  items: CartItem[];
   user: User | null;
 };
 
-export default function ProductDetailClientPage({
-  product,
-  items,
-  user,
-}: Props) {
+export default function ProductDetailClientPage({ product }: Props) {
   const [isPending, startTransition] = useTransition();
 
-  const availableStock = useMemo(() => {
-    const itemInCart = items.find((i) => i.product.id === product.id);
-    const cartQty = itemInCart ? itemInCart.quantity : 0;
-    return Math.max(0, product.stock_quantity - cartQty);
-  }, [items, product]);
+  const { refreshCart, getItemQuantity } = useCart();
+
+  const totalStock = product.stock_quantity;
+
+  const quantityInCart = getItemQuantity(product.id);
+
+  const availableStock = totalStock - quantityInCart;
 
   const discountPercentage =
     product.original_price && product.original_price > product.price
@@ -41,16 +38,20 @@ export default function ProductDetailClientPage({
         )
       : 0;
 
-  const handleAddToCart = () => {
-    if (!product.in_stock) return toast.error("Este producto está agotado");
-    if (!user?.id) return toast.error("Debes iniciar sesión");
+  function handleAddToCart() {
+    startTransition(async () => {
+      const result = await addToCart(product.id);
 
-    startTransition(() => {
-      addToCart(product.id)
-        .then(() => toast.success(`${product.name} agregado al carrito`))
-        .catch(() => toast.error("Error al agregar al carrito"));
+      if (result?.error) {
+        toast.error(result.error);
+        return;
+      }
+
+      toast.success(`${product.name} agregado al carrito`);
+
+      await refreshCart();
     });
-  };
+  }
 
   return (
     <section className="pt-24 pb-10">
@@ -74,11 +75,13 @@ export default function ProductDetailClientPage({
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 className="object-cover"
               />
+
               {discountPercentage > 0 && (
                 <Badge className="absolute top-4 left-4 bg-red-500 hover:bg-red-600">
                   -{discountPercentage}%
                 </Badge>
               )}
+
               {!product.in_stock && (
                 <Badge variant="secondary" className="absolute top-4 right-4">
                   Agotado
@@ -90,6 +93,7 @@ export default function ProductDetailClientPage({
           <div className="space-y-6">
             <div>
               <h1 className="mb-2 text-3xl font-bold">{product.name}</h1>
+
               <div className="mb-4 flex items-center gap-2">
                 <div className="flex items-center">
                   {[...Array(5)].map((_, i) => (
@@ -103,6 +107,7 @@ export default function ProductDetailClientPage({
                     />
                   ))}
                 </div>
+
                 <span className="text-muted-foreground text-sm">
                   {product.rating} ({product.review_count} reseñas)
                 </span>
@@ -154,7 +159,12 @@ export default function ProductDetailClientPage({
                 }
                 onClick={handleAddToCart}
               >
-                <ShoppingCart className="mr-2 h-5 w-5" />
+                {isPending ? (
+                  <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                ) : (
+                  <ShoppingCart className="mr-2 h-5 w-5" />
+                )}
+
                 {isPending
                   ? "Agregando..."
                   : availableStock > 0

@@ -1,14 +1,13 @@
 "use client";
 
-import { useState, useMemo, startTransition, ChangeEvent } from "react";
+import { useState, ChangeEvent } from "react";
 import { formatCurrency } from "@/src/lib/utils";
 import { Card, CardContent, CardFooter, CardTitle } from "../ui/card";
 import Image from "next/image";
 import { Button } from "../ui/button";
-import { Trash2 } from "lucide-react";
+import { Trash2, Loader2 } from "lucide-react";
 import { CartItem } from "@/src/types/cart";
 import { removeCartItem, updateCartQuantity } from "@/src/actions/cart";
-import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useCart } from "@/src/context/CartContext";
 
@@ -17,47 +16,49 @@ type Props = {
 };
 
 export default function ItemCard({ item }: Props) {
-  const { refreshCart } = useCart();
+  const { refreshCart, getAvailableStock, getItemQuantity } = useCart();
 
-  const [quantity, setQuantity] = useState(item.quantity);
+  const [isPending, setIsPending] = useState(false);
 
-  // Stock total real desde Supabase
+  const quantity = getItemQuantity(item.product.id);
+  const availableStock = getAvailableStock(item.product.id);
   const totalStock = item.product.stock_quantity;
-
-  // Stock disponible dinámico: lo que queda después de restar lo que ya tiene el usuario
-  const availableStock = useMemo(() => {
-    return totalStock - quantity;
-  }, [totalStock, quantity]);
 
   async function handleIncrease() {
     const newQty = quantity + 1;
-    setQuantity(newQty);
-
     await updateCartQuantity(item.id, newQty);
-    refreshCart(); // ← aquí
+    refreshCart();
   }
 
   async function handleDecrease() {
     if (quantity <= 1) return;
-
     const newQty = quantity - 1;
-    setQuantity(newQty);
-
     await updateCartQuantity(item.id, newQty);
-    refreshCart(); // ← aquí
+    refreshCart();
   }
 
   async function handleManualChange(e: ChangeEvent<HTMLInputElement>) {
     const val = Number(e.target.value);
-    setQuantity(val);
+
+    if (val < 1 || val > totalStock) return;
 
     await updateCartQuantity(item.id, val);
-    refreshCart(); // ← aquí
+    refreshCart();
   }
 
   async function handleRemoveCartItem() {
-    await removeCartItem(item.id);
-    refreshCart(); // ← aquí
+    try {
+      setIsPending(true);
+      await removeCartItem(item.id);
+
+      toast.success(item.product.name, {
+        description: "Eliminado del carrito.",
+      });
+
+      refreshCart();
+    } finally {
+      setIsPending(false);
+    }
   }
 
   return (
@@ -83,11 +84,9 @@ export default function ItemCard({ item }: Props) {
         <div className="font-medium">{formatCurrency(item.product.price)}</div>
       </CardContent>
 
-      <CardFooter className="flex w-auto flex-col items-center gap-3 sm:items-end">
-        {/* Controles de cantidad */}
-        <div className="mt-2 flex items-center gap-3">
+      <CardFooter className="flex w-auto flex-col items-center gap-2 sm:items-end">
+        <div className="mt-2 flex flex-col sm:flex-row items-center gap-3">
           <div className="flex w-fit items-center rounded border">
-            {/* DECREASE */}
             <Button
               variant="ghost"
               size="sm"
@@ -97,7 +96,6 @@ export default function ItemCard({ item }: Props) {
               -
             </Button>
 
-            {/* INPUT MANUAL */}
             <input
               value={quantity}
               className="w-12 border-r border-l text-center"
@@ -107,7 +105,6 @@ export default function ItemCard({ item }: Props) {
               onChange={handleManualChange}
             />
 
-            {/* INCREASE */}
             <Button
               variant="ghost"
               size="sm"
@@ -118,12 +115,10 @@ export default function ItemCard({ item }: Props) {
             </Button>
           </div>
 
-          {/* STOCK DINÁMICO */}
-          <div className="text-sm">Stock disponible: {availableStock}</div>
+          <p className="text-sm">Stock disponible: {availableStock}</p>
         </div>
 
-        {/* Total por ítem */}
-        <div className="text-muted-foreground flex items-center gap-2 text-sm">
+        <div className="text-muted-foreground flex items-center gap-1 text-sm">
           <span>{formatCurrency(item.product.price * quantity)}</span>
 
           <Button
@@ -131,8 +126,13 @@ export default function ItemCard({ item }: Props) {
             size="sm"
             className="text-destructive cursor-pointer"
             onClick={handleRemoveCartItem}
+            disabled={isPending}
           >
-            <Trash2 />
+            {isPending ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <Trash2 />
+            )}
           </Button>
         </div>
       </CardFooter>

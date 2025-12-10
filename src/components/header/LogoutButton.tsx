@@ -27,6 +27,7 @@ export default function LogOutButton() {
         toast.error(errorMessage);
       }
     } catch (error) {
+      console.error("Checkout error:", error);
       toast.error("Ocurrió un error al cerrar sesión");
     } finally {
       setLoading(false);
