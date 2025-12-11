@@ -8,10 +8,10 @@ import { Badge } from "../ui/badge";
 import { Product } from "@/src/types/product";
 
 type Props = {
-  products: Product[];
+  productsFeactured: Product[];
 };
 
-export default function FeacturedProductsSection({ products }: Props) {
+export default function FeacturedProductsSection({ productsFeactured }: Props) {
   return (
     <section className="py-20">
       <div className="text-center">
@@ -27,7 +27,7 @@ export default function FeacturedProductsSection({ products }: Props) {
       </div>
 
       <div className="grid grid-cols-1 gap-6 pt-12 md:grid-cols-2 lg:grid-cols-3">
-        {products.map((product) => (
+        {productsFeactured.map((product) => (
           <Card
             key={product.id}
             className="group transition-shadow hover:shadow-lg"
