@@ -42,7 +42,7 @@ export default async function CartPage() {
   return (
     <section className="pt-24 pb-10">
       <div className="mx-auto flex max-w-7xl flex-col gap-2 px-5">
-        <CartClientPage />
+        <CartClientPage user={user} />
       </div>
     </section>
   );

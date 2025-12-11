@@ -37,7 +37,9 @@ export async function addToCart(productId: string) {
   } = await supabase.auth.getUser();
 
   if (userError || !user) {
-    return { error: "Usuario no autenticado" };
+    return {
+      error: "Inicia sesión para agregar productos al carrito.",
+    };
   }
 
   // Obtener o crear carrito
@@ -158,4 +160,30 @@ export async function removeCartItem(itemId: string) {
   }
 
   return { success: true };
+}
+
+export async function clearCartOnServer(userId: string) {
+  const supabase = await createClient();
+
+  const { data: cartData, error: cartError } = await supabase
+    .from("carts")
+    .select("id")
+    .eq("user_id", userId)
+    .single();
+
+  if (cartError || !cartData) {
+    console.error("Error obteniendo el carrito:", cartError);
+    return;
+  }
+
+  const cartId = cartData.id;
+
+  const { error: deleteError } = await supabase
+    .from("cart_items")
+    .delete()
+    .eq("cart_id", cartId);
+
+  if (deleteError) {
+    console.error("Error borrando items del carrito:", deleteError);
+  }
 }

@@ -1,6 +1,8 @@
 "use client";
 
+import { clearCartOnServer } from "@/src/actions/cart";
 import CartEmpty from "@/src/components/cart/CartEmpty";
+import CartLoading from "@/src/components/cart/CartLoading";
 import ItemCard from "@/src/components/cart/ItemCard";
 import { Button } from "@/src/components/ui/button";
 import {
@@ -10,16 +12,29 @@ import {
   CardContent,
   CardFooter,
 } from "@/src/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/src/components/ui/dialog";
 import { useCart } from "@/src/context/CartContext";
 import { formatCurrency } from "@/src/lib/utils";
+import { User } from "@supabase/supabase-js";
 import { ArrowLeft, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
 
-export default function CartClientPage() {
+type Props = {
+  user: User;
+};
+
+export default function CartClientPage({ user }: Props) {
   const [loading, setLoading] = useState(false);
-  const { items } = useCart();
+  const { items, loadingCart, clearCart, refreshCart } = useCart();
+  const [showProcessingModal, setShowProcessingModal] = useState(false);
 
   const totalQuantity = items.reduce((sum, item) => sum + item.quantity, 0);
 
@@ -35,23 +50,50 @@ export default function CartClientPage() {
     try {
       setLoading(true);
 
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      setShowProcessingModal(true);
+
+      await new Promise((res) => setTimeout(res, 2000));
+
+      await clearCartOnServer(user.id);
 
       toast.success("Compra realizada correctamente", {
         description: "Gracias por su compra",
       });
+
+      clearCart();
+      refreshCart();
     } catch (error) {
       console.error("Checkout error:", error);
       toast.error("Hubo un error realizando la compra");
     } finally {
       setLoading(false);
+      setShowProcessingModal(false);
     }
+  }
+
+  if (loadingCart) {
+    return <CartLoading />;
   }
 
   if (items.length === 0) return <CartEmpty />;
 
   return (
     <>
+      <Dialog open={showProcessingModal}>
+        <DialogContent className="max-w-xs text-center flex flex-col items-center gap-4 py-8">
+          <DialogHeader>
+            <DialogTitle className="flex flex-col items-center gap-4">
+              <Loader2 className="h-8 w-8 animate-spin text-primary" />
+              Procesando pago...
+            </DialogTitle>
+
+            <DialogDescription className="text-center mt-2">
+              Por favor, no cierre la página.
+            </DialogDescription>
+          </DialogHeader>
+        </DialogContent>
+      </Dialog>
+
       <Link
         href="/products"
         className="text-muted-foreground hover:text-foreground mb-6 inline-flex items-center gap-2"
@@ -95,18 +137,11 @@ export default function CartClientPage() {
             </CardContent>
             <CardFooter>
               <Button
-                className="w-full"
+                className="w-full cursor-pointer"
                 onClick={handleTestCheckout}
                 disabled={loading}
               >
-                {loading ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Procesando...
-                  </>
-                ) : (
-                  "Proceder con la compra"
-                )}
+                {loading ? "Procesando..." : "Proceder con la compra"}
               </Button>
             </CardFooter>
           </Card>

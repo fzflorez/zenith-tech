@@ -12,15 +12,18 @@ import { getCartItems } from "@/src/actions/cart";
 
 type CartContextType = {
   items: CartItem[];
+  loadingCart: boolean;
   refreshCart: () => Promise<void>;
   getItemQuantity: (productId: string) => number;
   getAvailableStock: (productId: string) => number;
+  clearCart: () => void;
 };
 
 const CartContext = createContext<CartContextType | null>(null);
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
+  const [loadingCart, setLoadingCart] = useState(true);
 
   async function refreshCart() {
     const data = await getCartItems();
@@ -31,6 +34,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     async function load() {
       const data = await getCartItems();
       setItems(data);
+      setLoadingCart(false);
     }
     load();
   }, []);
@@ -53,9 +57,20 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     [items]
   );
 
+  function clearCart() {
+    setItems([]);
+  }
+
   return (
     <CartContext.Provider
-      value={{ items, refreshCart, getItemQuantity, getAvailableStock }}
+      value={{
+        items,
+        loadingCart,
+        refreshCart,
+        getItemQuantity,
+        getAvailableStock,
+        clearCart,
+      }}
     >
       {children}
     </CartContext.Provider>
