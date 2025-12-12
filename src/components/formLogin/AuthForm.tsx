@@ -62,7 +62,7 @@ export default function AuthForm({ type }: Props) {
       }
 
       if (!errorMessage) {
-        toast.success(title, { description });
+        toast.success(title, { description, duration: 6000 });
         if (isLoginForm) {
           router.replace("/");
         } else {
