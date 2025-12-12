@@ -8,9 +8,10 @@ import {
 import Link from "next/link";
 import { NavigationPanel, NavigationPanelMobile } from "./NavigationPanel";
 import RightSideActions from "./RightSideActions";
-import { Menu, Store } from "lucide-react";
+import { Menu } from "lucide-react";
 import { DarkModeToggle } from "../DarkModeToggle";
 import { getUser } from "@/src/auth/server";
+import Image from "next/image";
 
 export default async function Header() {
   const user = await getUser();
@@ -20,9 +21,9 @@ export default async function Header() {
       <div className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between">
         <Link
           href="/"
-          className="text-accent-foreground flex items-center gap-3"
+          className="text-accent-foreground flex items-center gap-2"
         >
-          <Store size={24} />
+          <Image src="/logo.png" alt="" width={30} height={30} />
           <span className="hidden text-xl font-bold sm:block">Zenith Tech</span>
         </Link>
 
