@@ -24,7 +24,7 @@ export default function ShoppingCartComponent({ user }: Props) {
       )}
       <Button variant="link" size="sm" className="cursor-pointer">
         <Link href="/cart">
-          <ShoppingCart />
+          <ShoppingCart className="text-white" />
         </Link>
       </Button>
     </div>

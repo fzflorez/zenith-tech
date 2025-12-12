@@ -16,7 +16,7 @@ export function NavigationPanel() {
         <Link
           key={item.name}
           href={item.href}
-          className="text-accent-foreground hover:underline"
+          className="text-white hover:underline"
         >
           {item.name}
         </Link>

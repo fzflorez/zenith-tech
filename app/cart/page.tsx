@@ -19,13 +19,13 @@ export default async function CartPage() {
         <div className="mx-auto max-w-md px-5">
           <Card className="text-center">
             <CardHeader>
-              <CardTitle className="text-foreground text-2xl font-semibold">
+              <CardTitle className="text-accent-foreground text-2xl font-semibold">
                 Inicia sesión
               </CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-muted-foreground text-sm sm:text-base">
-                Debes iniciar sesión para poder agregar productos al carrito.
+                Debes iniciar sesión para ver los productos en tu carrito.
               </p>
             </CardContent>
             <CardFooter className="flex justify-center">
